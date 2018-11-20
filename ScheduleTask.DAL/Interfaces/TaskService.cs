@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web;
+using ScheduleTask.DAL;
 using Task1.Models;
 
 namespace Task1.Services
@@ -21,7 +22,13 @@ namespace Task1.Services
     public class TaskService : ITaskService
     {
 
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private ApplicationDbContext db;
+
+        public TaskService(ApplicationDbContext context)
+        {
+            db = context;
+        }
+
 
         public Tasks GetById(int id)
         {

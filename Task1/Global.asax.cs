@@ -6,6 +6,8 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using ScheduleTask.DAL;
+using ScheduleTask.DAL.Interfaces;
 using SimpleInjector;
 using SimpleInjector.Integration.WebApi;
 using SimpleInjector.Lifestyles;
@@ -23,8 +25,7 @@ namespace Task1
 
             container.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
 
-            container.Register<IUserService, UserService>(Lifestyle.Scoped);
-            container.Register<ITaskService, TaskService>(Lifestyle.Scoped);
+            container.Register(typeof(IDataAccess), typeof(DataAccess), Lifestyle.Scoped);
 
             container.Verify();
 

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ScheduleTask.DAL.Interfaces;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -9,45 +11,46 @@ using Task1.Services;
 
 namespace Task1.Controllers
 {
+    [Authorize]
     public class TaskController : ApiController
     {
-        private ITaskService _ts;
+        private IDataAccess _db;
 
-        public TaskController(ITaskService ts)
+        public TaskController(IDataAccess dataAccess)
         {
-            _ts = ts;
+            _db = dataAccess;
         }
 
         //[HttpGet]
         public IEnumerable<Tasks> GetTasks()
         {
-            return _ts.GetTasks();
+            return _db.Tasks.GetTasks();
         }
 
-                public bool AddTask(Tasks task)
+        public bool AddTask(Tasks task)
         {
-            _ts.AddTask(task);
+            _db.Tasks.AddTask(task);
             return true;
         }
 
         //[HttpPut]
         public bool UpdateTask(Tasks task)
         {
-            _ts.UpdateTask(task);
+            _db.Tasks.UpdateTask(task);
             return true;
         }
 
         //[HttpDelete]
         public bool DeleteTask(Tasks task)
         {
-            _ts.DeleteTask(task.TaskId);
+            _db.Tasks.DeleteTask(task.TaskId);
             return true;
         }
 
         
         public bool AssignUser(AssignViewModel avm)
         {
-            _ts.AssignUser(avm.TaskId,avm.UserId);
+            _db.Tasks.AssignUser(avm.TaskId,avm.UserId);
             return true;
         }
     }

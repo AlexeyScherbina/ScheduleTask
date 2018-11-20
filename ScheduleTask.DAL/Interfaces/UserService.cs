@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using ScheduleTask.DAL;
 using Task1.Models;
 
 namespace Task1.Services
@@ -17,7 +18,12 @@ namespace Task1.Services
 
     public class UserService : IUserService
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private ApplicationDbContext db;
+
+        public UserService(ApplicationDbContext context)
+        {
+            db = context;
+        }
 
         public User GetById(int id)
         {
