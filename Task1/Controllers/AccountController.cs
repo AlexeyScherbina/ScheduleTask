@@ -26,6 +26,7 @@ namespace Task1.Controllers
         private const string LocalLoginProvider = "Local";
         private ApplicationUserManager _userManager;
 
+       
 
         public AccountController(ApplicationUserManager userManager,
             ISecureDataFormat<AuthenticationTicket> accessTokenFormat)
@@ -33,7 +34,6 @@ namespace Task1.Controllers
             UserManager = userManager;
             AccessTokenFormat = accessTokenFormat;
         }
-
 
 
         public ApplicationUserManager UserManager

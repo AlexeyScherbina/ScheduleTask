@@ -4,36 +4,36 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ScheduleTask.DAL.Interfaces;
-using Task1.Services;
+
 
 namespace ScheduleTask.DAL
 {
     public class DataAccess : IDataAccess
     {
         private readonly ApplicationDbContext _db;
-        private TaskService _taskService;
-        private UserService _userService;
+        private TaskRepository _taskService;
+        private UserRepository _userService;
 
         public DataAccess()
         {
             _db = new ApplicationDbContext();
         }
-        public ITaskService Tasks
+        public ITaskRepository Tasks
         {
             get
             {
                 if (_taskService == null)
-                    _taskService = new TaskService(_db);
+                    _taskService = new TaskRepository(_db);
                 return _taskService;
             }
         }
 
-        public IUserService Users
+        public IUserRepository Users
         {
             get
             {
                 if (_userService == null)
-                    _userService = new UserService(_db);
+                    _userService = new UserRepository(_db);
                 return _userService;
             }
         }

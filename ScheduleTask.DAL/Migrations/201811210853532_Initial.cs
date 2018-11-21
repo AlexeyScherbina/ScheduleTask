@@ -1,4 +1,4 @@
-namespace Task1.Migrations
+namespace ScheduleTask.DAL.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;
@@ -29,6 +29,29 @@ namespace Task1.Migrations
                 .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: true)
                 .Index(t => t.UserId)
                 .Index(t => t.RoleId);
+            
+            CreateTable(
+                "dbo.Tasks",
+                c => new
+                    {
+                        TaskId = c.Int(nullable: false, identity: true),
+                        Name = c.String(),
+                        Description = c.String(),
+                        Day = c.String(),
+                        User_UserId = c.Int(),
+                    })
+                .PrimaryKey(t => t.TaskId)
+                .ForeignKey("dbo.Users", t => t.User_UserId)
+                .Index(t => t.User_UserId);
+            
+            CreateTable(
+                "dbo.Users",
+                c => new
+                    {
+                        UserId = c.Int(nullable: false, identity: true),
+                        FullName = c.String(),
+                    })
+                .PrimaryKey(t => t.UserId);
             
             CreateTable(
                 "dbo.AspNetUsers",
@@ -82,16 +105,20 @@ namespace Task1.Migrations
             DropForeignKey("dbo.AspNetUserRoles", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
+            DropForeignKey("dbo.Tasks", "User_UserId", "dbo.Users");
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
             DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
             DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
             DropIndex("dbo.AspNetUsers", "UserNameIndex");
+            DropIndex("dbo.Tasks", new[] { "User_UserId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
             DropTable("dbo.AspNetUserLogins");
             DropTable("dbo.AspNetUserClaims");
             DropTable("dbo.AspNetUsers");
+            DropTable("dbo.Users");
+            DropTable("dbo.Tasks");
             DropTable("dbo.AspNetUserRoles");
             DropTable("dbo.AspNetRoles");
         }

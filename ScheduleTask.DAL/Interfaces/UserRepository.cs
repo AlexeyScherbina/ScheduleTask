@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using ScheduleTask.DAL;
-using Task1.Models;
+using ScheduleTask.DAL.Entities;
 
-namespace Task1.Services
+namespace ScheduleTask.DAL.Interfaces
 {
-    public interface IUserService
+    public interface IUserRepository
     {
         User GetById(int id);
         List<User> GetUsers();
@@ -16,11 +13,11 @@ namespace Task1.Services
         void DeleteUser(int id);
     }
 
-    public class UserService : IUserService
+    public class UserRepository : IUserRepository
     {
         private ApplicationDbContext db;
 
-        public UserService(ApplicationDbContext context)
+        public UserRepository(ApplicationDbContext context)
         {
             db = context;
         }

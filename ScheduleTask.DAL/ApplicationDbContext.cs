@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using Task1.Models;
+using ScheduleTask.DAL.Entities;
 
 namespace ScheduleTask.DAL
 {
@@ -33,9 +33,9 @@ namespace ScheduleTask.DAL
         public DbSet<User> Users { get; set; }
 
 
-        /*public static ApplicationDbContext Create()
+        public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();
-        }*/
+        }
     }
 }

@@ -59,13 +59,23 @@
     <Compile Include="Entities\Task.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="Interfaces\IDataAccess.cs" />
-    <Compile Include="Interfaces\TaskService.cs" />
-    <Compile Include="Interfaces\UserService.cs" />
+    <Compile Include="Interfaces\TaskRepository.cs" />
+    <Compile Include="Interfaces\UserRepository.cs" />
+    <Compile Include="Migrations\201811210853532_Initial.cs" />
+    <Compile Include="Migrations\201811210853532_Initial.Designer.cs">
+      <DependentUpon>201811210853532_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201811210853532_Initial.resx">
+      <DependentUpon>201811210853532_Initial.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -5,47 +5,55 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Results;
-using ScheduleTask.DAL.Interfaces;
+using System.Web.WebSockets;
+using AutoMapper;
+using ScheduleTask.BLL.DTO;
+using ScheduleTask.BLL.Interfaces;
+using ScheduleTask.DAL.Entities;
 using Task1.Models;
-using Task1.Services;
 
 namespace Task1.Controllers
 {
     [Authorize]
     public class UserController : ApiController
     {
-        private IDataAccess _db;
+        private readonly IUserService userService;
 
-        public UserController(IDataAccess dataAccess)
+        public UserController(IUserService us)
         {
-            _db = dataAccess;
+            userService = us;
         }
 
-        [HttpGet]
-        public IEnumerable<User> GetUsers()
+        public IEnumerable<UserViewModel> GetUsers()
         {
-            return _db.Users.GetUsers();
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<UserDTO, UserViewModel>()).CreateMapper();
+            return mapper.Map<IEnumerable<UserDTO>, IEnumerable<UserViewModel>>(userService.GetUsers());
         }
 
-        [HttpPost]
-        public bool AddUser(User user)
+        public IHttpActionResult AddUser(UserViewModel user)
         {
-            _db.Users.AddUser(user);
-            return true;
+            if (user == null)
+            {
+                return BadRequest();
+            }
+
+            UserDTO u = new UserDTO
+            {
+                FullName = user.FullName,
+                Tasks = new List<TaskDTO>()
+            };
+            userService.AddUser(u);
+            return Ok();
         }
 
-        [HttpPut]
-        public bool UpdateUser(User user)
+        public IHttpActionResult DeleteUser(UserViewModel user)
         {
-            _db.Users.UpdateUser(user);
-            return true;
-        }
-
-        [HttpDelete]
-        public bool DeleteUser(User user)
-        {
-            _db.Users.DeleteUser(user.UserId);
-            return true;
+            if (user == null)
+            {
+                return BadRequest();
+            }
+            userService.DeleteUser(user.UserId);
+            return Ok();
         }
     }
 }

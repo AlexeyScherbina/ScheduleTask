@@ -1,57 +1,71 @@
-﻿using ScheduleTask.DAL.Interfaces;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Results;
+using AutoMapper;
+using ScheduleTask.BLL.DTO;
+using ScheduleTask.BLL.Interfaces;
+using ScheduleTask.DAL.Entities;
 using Task1.Models;
-using Task1.Services;
 
 namespace Task1.Controllers
 {
     [Authorize]
     public class TaskController : ApiController
     {
-        private IDataAccess _db;
+        private readonly ITaskService taskService;
 
-        public TaskController(IDataAccess dataAccess)
+        public TaskController(ITaskService ts)
         {
-            _db = dataAccess;
+            taskService = ts;
         }
 
-        //[HttpGet]
-        public IEnumerable<Tasks> GetTasks()
+        public IEnumerable<TaskViewModel> GetTasks()
         {
-            return _db.Tasks.GetTasks();
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<TaskDTO, TaskViewModel>()).CreateMapper();
+            return mapper.Map<IEnumerable<TaskDTO>, IEnumerable<TaskViewModel>>(taskService.GetTasks());
         }
 
-        public bool AddTask(Tasks task)
+        public IHttpActionResult AddTask(TaskViewModel task)
         {
-            _db.Tasks.AddTask(task);
-            return true;
+            if (task == null)
+            {
+                return BadRequest();
+            }
+
+            TaskDTO t = new TaskDTO
+            {
+                Name = task.Name,
+                Description = task.Description,
+                Day = task.Day,
+                User = null
+            };
+            taskService.AddTask(t);
+            return Ok();
         }
 
-        //[HttpPut]
-        public bool UpdateTask(Tasks task)
+        public IHttpActionResult DeleteTask(TaskViewModel task)
         {
-            _db.Tasks.UpdateTask(task);
-            return true;
+            if (task == null)
+            {
+                return BadRequest();
+            }
+            taskService.DeleteTask(task.TaskId);
+            return Ok();
         }
-
-        //[HttpDelete]
-        public bool DeleteTask(Tasks task)
+    
+        public IHttpActionResult AssignUser(AssignViewModel avm)
         {
-            _db.Tasks.DeleteTask(task.TaskId);
-            return true;
-        }
-
-        
-        public bool AssignUser(AssignViewModel avm)
-        {
-            _db.Tasks.AssignUser(avm.TaskId,avm.UserId);
-            return true;
+            if (avm == null)
+            {
+                return BadRequest();
+            }
+            taskService.AssignUser(avm.TaskId,avm.UserId);
+            return Ok();
         }
     }
 }

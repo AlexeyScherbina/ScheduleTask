@@ -1,30 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using ScheduleTask.DAL;
-using Task1.Models;
+using ScheduleTask.DAL.Entities;
 
-namespace Task1.Services
+namespace ScheduleTask.DAL.Interfaces
 {
 
-    public interface ITaskService
+    public interface ITaskRepository
     {
         Tasks GetById(int id);
         List<Tasks> GetTasks();
         void AddTask(Tasks task);
         void UpdateTask(Tasks task);
         void DeleteTask(int id);
-        void AssignUser(int taskId, int userId);
     }
 
-    public class TaskService : ITaskService
+    public class TaskRepository : ITaskRepository
     {
 
         private ApplicationDbContext db;
 
-        public TaskService(ApplicationDbContext context)
+        public TaskRepository(ApplicationDbContext context)
         {
             db = context;
         }
@@ -63,12 +58,5 @@ namespace Task1.Services
             db.SaveChanges();
         }
 
-        public void AssignUser(int taskId, int userId)
-        {
-            Tasks t = db.Tasks.FirstOrDefault(x => x.TaskId == taskId);
-            User u = db.Users.FirstOrDefault(x => x.UserId == userId);
-            t.User = u;
-            db.SaveChanges();
-        }
     }
 }
