@@ -1,1 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
+.mycard{
+    border: 1px solid grey;
+    border-radius: 4px;
+    background-color: lightsteelblue;
+    padding: 5px;
+    margin: 10px;
+}
+.mycol{
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    height: 100vh;
+}
+.smallcol{
+    width: 200px;
+}
