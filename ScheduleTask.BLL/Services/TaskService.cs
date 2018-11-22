@@ -38,8 +38,6 @@ namespace ScheduleTask.BLL.Services
 
         public void AssignDay(TaskDTO task)
         {
-            //Tasks t = Database.Tasks.GetById(task.TaskId);
-            //t.Day = task.Day;
             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<TaskDTO, Tasks>()).CreateMapper();
             Database.Tasks.UpdateTask(mapper.Map<TaskDTO, Tasks>(task));
             Database.Save();
@@ -48,8 +46,17 @@ namespace ScheduleTask.BLL.Services
         public void AssignUser(int taskId, int userId)
         {
             Tasks t = Database.Tasks.GetById(taskId);
-            User u = Database.Users.GetById(userId);
-            t.User = u;
+            User u;
+            if (userId == 0)
+            {
+                u = Database.Users.GetById(t.User.UserId);
+                u.Tasks.Remove(t);
+            }
+            else
+            {
+                u = Database.Users.GetById(userId);
+                t.User = u;
+            }
             Database.Tasks.UpdateTask(t);
             Database.Save();
         }

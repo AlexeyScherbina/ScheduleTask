@@ -1,8 +1,6 @@
-<p>
-  login works!
-</p>
-<h2>Login</h2>
-<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+<div class="container">
+        <h2>Login</h2>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
     <div class="form-group">
         <label for="username">Username</label>
         <input type="text" formControlName="username" class="form-control" required minlength="6" />
@@ -17,3 +15,5 @@
         <button [disabled]="loginForm.invalid" class="btn btn-primary">Login</button>
     </div>
 </form>
+</div>
+

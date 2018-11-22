@@ -48,7 +48,11 @@ namespace ScheduleTask.DAL.Interfaces
             if (task.Day != null) { temp.Day = task.Day; }
             if (task.Description != null) { temp.Description = task.Description; }
             if (task.Name != null) { temp.Name = task.Name; }
-            if (task.User != null) { temp.User = task.User; }
+
+            if (task.User != null)
+            {
+                temp.User = task.User;
+            }
             db.SaveChanges();
         }
 

@@ -18,4 +18,10 @@ export class TaskService {
   DeleteTask(task: Task){
     return this.http.delete(`http://localhost:50029/api/Task/DeleteTask/` + task.TaskId );
   }
+  AssignDay(task: Task){
+    return this.http.post(`http://localhost:50029/api/Task/AssignDay`, task );
+  }
+  AssignUser(tid: number, uid: number){
+    return this.http.post(`http://localhost:50029/api/Task/AssignUser`, {taskId: tid, userId: uid} );
+  }
 }
