@@ -46,13 +46,21 @@ namespace Task1.Controllers
             return Ok();
         }
 
-        public IHttpActionResult DeleteUser(UserViewModel user)
+        public IHttpActionResult DeleteUser(int id)
         {
-            if (user == null)
+            if (id == null)
             {
                 return BadRequest();
             }
-            userService.DeleteUser(user.UserId);
+
+            try
+            {
+                userService.DeleteUser(id);
+            }
+            catch
+            {
+                return BadRequest();
+            }
             return Ok();
         }
     }

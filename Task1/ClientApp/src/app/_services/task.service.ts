@@ -13,7 +13,9 @@ export class TaskService {
     return this.http.get<Task[]>(`http://localhost:50029/api/Task/GetTasks`);
   }
   AddTask(task: Task){
-    const headers = new HttpHeaders({'Content-Type':'application/json'});
-    return this.http.post(`http://localhost:50029/api/Task/AddTask`, task, {headers:headers});
+    return this.http.post(`http://localhost:50029/api/Task/AddTask`, task);
+  }
+  DeleteTask(task: Task){
+    return this.http.delete(`http://localhost:50029/api/Task/DeleteTask/` + task.TaskId );
   }
 }

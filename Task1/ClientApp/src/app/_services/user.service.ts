@@ -16,4 +16,7 @@ export class UserService {
     const headers = new HttpHeaders({'Content-Type':'application/json'});
     return this.http.post(`http://localhost:50029/api/User/AddUser`, user, {headers:headers});
   }
+  DeleteUser(user: User){
+    return this.http.delete(`http://localhost:50029/api/User/DeleteUser/` + user.UserId);
+  }
 }

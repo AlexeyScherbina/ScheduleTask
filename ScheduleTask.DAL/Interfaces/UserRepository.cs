@@ -48,10 +48,15 @@ namespace ScheduleTask.DAL.Interfaces
         public void DeleteUser(int id)
         {
             User temp = db.Users.FirstOrDefault(x => x.UserId == id);
-            foreach (var t in temp.Tasks)
+
+            if (temp.Tasks != null)
             {
-                t.User = null;
+                foreach (var t in temp.Tasks)
+                {
+                    t.User = null;
+                }
             }
+
             db.Users.Remove(temp);
             db.SaveChanges();
         }

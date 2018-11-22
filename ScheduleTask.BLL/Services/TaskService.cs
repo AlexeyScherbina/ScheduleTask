@@ -38,8 +38,10 @@ namespace ScheduleTask.BLL.Services
 
         public void AssignDay(TaskDTO task)
         {
-            Tasks t = Database.Tasks.GetById(task.TaskId);
-            t.Day = task.Day;
+            //Tasks t = Database.Tasks.GetById(task.TaskId);
+            //t.Day = task.Day;
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<TaskDTO, Tasks>()).CreateMapper();
+            Database.Tasks.UpdateTask(mapper.Map<TaskDTO, Tasks>(task));
             Database.Save();
         }
 

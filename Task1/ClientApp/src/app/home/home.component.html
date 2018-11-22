@@ -1,12 +1,13 @@
-<div class="container">
+<div class="layout">
   <div class="row">
     <div class="mycol smallcol">
       <div class="mycard">
         <input [(ngModel)]="newTask" placeholder="Task Name" class="col-12" />
         <button [disabled] = "newTask.length<1 || loading" (click)="AddTask()" class="col-12">Add</button>
       </div>
-      <div *ngFor="let task of tasks" class="mycard">
+      <div *ngFor="let task of taskArray[5]" class="mycard" style="height: 40px;">
         {{task.Name}}
+        <button (click)="DeleteTask(task)" type="button" class="btn btn-sm" style="float:right;"><i class="fas fa-times"></i></button>
       </div>
     </div>
     <div class="mycol smallcol">
@@ -14,28 +15,54 @@
         <input [(ngModel)]="newUser" placeholder="User Name" class="col-12" />
         <button [disabled] = "newUser.length<1 || loading" (click)="AddUser()" class="col-12">Add</button>
       </div>
-      <div *ngFor="let user of users" class="mycard">
+      <div *ngFor="let user of users" class="mycard" style="height: 40px;">
         {{user.FullName}}
+        <button (click)="DeleteUser(user)" type="button" class="btn btn-sm" style="float: right;"><i class="fas fa-times"></i></button>
       </div>
     </div>
     <div class="mycol">
         <table class="table">
             <thead>
               <tr>
-                <th scope="col">Monday</th>
-                <th scope="col">Tuesday</th>
-                <th scope="col">Wednesday</th>
-                <th scope="col">Thursday</th>
-                <th scope="col">Friday</th>
+                <th scope="col" class="smallcol">Monday</th>
+                <th scope="col" class="smallcol">Tuesday</th>
+                <th scope="col" class="smallcol">Wednesday</th>
+                <th scope="col" class="smallcol">Thursday</th>
+                <th scope="col" class="smallcol">Friday</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>4</td>
-                <td>5</td>
+                <td>
+                  <div *ngFor="let task of taskArray[0]" class="mycard">
+                    {{task.Name}}
+                    {{task.User.FullName}}
+                  </div>
+                </td>
+                <td>
+                  <div *ngFor="let task of taskArray[1]" class="mycard">
+                    {{task.Name}}
+                    {{task.User.FullName}}
+                  </div>
+                </td>
+                <td>
+                  <div *ngFor="let task of taskArray[2]" class="mycard">
+                    {{task.Name}}
+                    {{task.User.FullName}}
+                  </div>
+                </td>
+                <td>
+                  <div *ngFor="let task of taskArray[3]" class="mycard">
+                    {{task.Name}}
+                    {{task.User.FullName}}
+                  </div>
+                </td>
+                <td>
+                  <div *ngFor="let task of taskArray[4]" class="mycard">
+                    {{task.Name}}
+                    {{task.User.FullName}}
+                  </div>
+                </td>
               </tr>
             </tbody>
           </table>

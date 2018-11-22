@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization.Formatters;
 using ScheduleTask.DAL.Entities;
 
 namespace ScheduleTask.DAL.Interfaces
@@ -44,16 +45,17 @@ namespace ScheduleTask.DAL.Interfaces
         public void UpdateTask(Tasks task)
         {
             Tasks temp = db.Tasks.FirstOrDefault(x => x.TaskId == task.TaskId);
-            temp.Day = task.Day;
-            temp.Description = task.Description;
-            temp.Name = task.Name;
+            if (task.Day != null) { temp.Day = task.Day; }
+            if (task.Description != null) { temp.Description = task.Description; }
+            if (task.Name != null) { temp.Name = task.Name; }
+            if (task.User != null) { temp.User = task.User; }
             db.SaveChanges();
         }
 
         public void DeleteTask(int id)
         {
             Tasks temp = db.Tasks.FirstOrDefault(x => x.TaskId == id);
-            temp.User.Tasks.Remove(temp);
+            if(temp.User != null) { temp.User.Tasks.Remove(temp); }
             db.Tasks.Remove(temp);
             db.SaveChanges();
         }

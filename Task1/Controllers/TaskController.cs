@@ -48,13 +48,21 @@ namespace Task1.Controllers
             return Ok();
         }
 
-        public IHttpActionResult DeleteTask(TaskViewModel task)
+        public IHttpActionResult DeleteTask(int id)
         {
-            if (task == null)
+            if (id == null)
             {
                 return BadRequest();
             }
-            taskService.DeleteTask(task.TaskId);
+
+            try
+            {
+                taskService.DeleteTask(id);
+            }
+            catch
+            {
+                return BadRequest();
+            }
             return Ok();
         }
     
@@ -64,7 +72,40 @@ namespace Task1.Controllers
             {
                 return BadRequest();
             }
-            taskService.AssignUser(avm.TaskId,avm.UserId);
+
+            try
+            {
+                taskService.AssignUser(avm.TaskId, avm.UserId);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+            return Ok();
+        }
+
+        public IHttpActionResult AssignDay(TaskViewModel task)
+        {
+            if (task == null)
+            {
+                return BadRequest();
+            }
+
+            TaskDTO t = new TaskDTO
+            {
+                TaskId = task.TaskId,
+                Day = task.Day,
+                Description = task.Description,
+                Name = task.Name
+            };
+            try
+            {
+                taskService.AssignDay(t);
+            }
+            catch
+            {
+                return BadRequest();
+            }
             return Ok();
         }
     }

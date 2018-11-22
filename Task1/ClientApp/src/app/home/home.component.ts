@@ -14,7 +14,7 @@ import { User } from '../_models/user';
 })
 export class HomeComponent implements OnInit {
 
-  tasks: Task[];
+  taskArray: Array<Array<Task>>;
   users: User[];
 
   newTask: string = '';
@@ -23,15 +23,34 @@ export class HomeComponent implements OnInit {
   loading = false;
 
   GetTasks(){
-    this.taskService.GetTasks().subscribe(result => this.tasks = result as Task[]);
+    this.taskArray = new Array<Array<Task>>();
+    for(var i = 0; i < 6; i++){
+      this.taskArray.push(new Array<Task>());
+    }
+    this.taskService.GetTasks().subscribe(result => {
+      result.forEach(element => {
+        if(element.User === null){
+          element.User = new User();
+        }
+        switch(element.Day){
+          case "Monday": this.taskArray[0].push(element); break;
+          case "Tuesday": this.taskArray[1].push(element); break;
+          case "Wednesday": this.taskArray[2].push(element); break;
+          case "Thursday": this.taskArray[3].push(element); break;
+          case "Friday": this.taskArray[4].push(element); break;
+          default: this.taskArray[5].push(element); break;
+        }
+      });
+      console.log(this.taskArray);
+    });
   }
   GetUsers(){
     this.userService.GetUsers().subscribe(result => this.users = result as User[]);
   }
 
-  constructor(private authService : AuthenticationService, private userService : UserService, private taskService : TaskService) {
+  constructor(private authService : AuthenticationService, private userService : UserService, private taskService : TaskService) { 
     this.GetTasks();
-    this.GetUsers();  
+    this.GetUsers();
   }
 
   ngOnInit() {
@@ -41,13 +60,24 @@ export class HomeComponent implements OnInit {
     this.authService.logout();
   }
 
+  DeleteTask(task:Task){
+    this.taskService.DeleteTask(task).subscribe(result => {
+      this.taskArray[5].splice(this.taskArray[5].indexOf(task),1);
+    });
+  }
+  DeleteUser(user:User){
+    this.userService.DeleteUser(user).subscribe(result => {
+      this.users.splice(this.users.indexOf(user),1);
+    });
+  }
+
   AddTask(){
     let task: Task = {
       TaskId: undefined,
       Name: this.newTask,
       Description: '',
       Day: '',
-      User: null
+      User: new User()
     }
     this.loading = true;
     this.taskService.AddTask(task).subscribe(result =>{
