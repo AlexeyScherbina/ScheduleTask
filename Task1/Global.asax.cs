@@ -37,20 +37,24 @@ namespace Task1
             container.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
 
 
-            container.Register<IApplicationDbContext, ApplicationDbContext>(Lifestyle.Scoped);
-            container.Register(typeof(IRepository<>),typeof(IRepository<>).Assembly, Lifestyle.Scoped);
+
+
+
+
+            container.Register<IApplicationDbContext>(() => new ApplicationDbContext(), Lifestyle.Scoped);
+            container.Register(typeof(IRepository<>), typeof(IRepository<>).Assembly, Lifestyle.Scoped);
             container.Register(typeof(IUserService), typeof(UserService), Lifestyle.Scoped);
             container.Register(typeof(ITaskService), typeof(TaskService), Lifestyle.Scoped);
 
             container.Options.AllowOverridingRegistrations = true;
 
-            container.Register<IUserStore<ApplicationUser>>(() => new UserStore<ApplicationUser>(), Lifestyle.Scoped);
+            container.Register<IUserStore<ApplicationUser>>(() => new UserStore<ApplicationUser>(new ApplicationDbContext()), Lifestyle.Scoped);
             container.Register<ApplicationUserManager>(
-                () => new ApplicationUserManager(new UserStore<ApplicationUser>()), Lifestyle.Scoped
+                () => new ApplicationUserManager(new UserStore<ApplicationUser>(new ApplicationDbContext())), Lifestyle.Scoped
             );
-            container.Register<UserStore<ApplicationUser>>(() => new UserStore<ApplicationUser>(), Lifestyle.Scoped);
+            container.Register<UserStore<ApplicationUser>>(() => new UserStore<ApplicationUser>(new ApplicationDbContext()), Lifestyle.Scoped);
             container.Register<UserManager<ApplicationUser, string>>(
-                () => new UserManager<ApplicationUser, string>(new UserStore<ApplicationUser>()),
+                () => new UserManager<ApplicationUser, string>(new UserStore<ApplicationUser>(new ApplicationDbContext())),
                 Lifestyle.Scoped);
 
             container.Register<ISecureDataFormat<AuthenticationTicket>, SecureDataFormat<AuthenticationTicket>>(Lifestyle.Scoped);
@@ -59,7 +63,7 @@ namespace Task1
             container.Register<IDataProtector>(() => new Microsoft.Owin.Security.DataProtection.DpapiDataProtectionProvider().Create("ASP.NET Identity"), Lifestyle.Scoped);
             //container.Register(() => HttpContext.Current.GetOwinContext().Authentication, Lifestyle.Scoped);
             container.Register<UserManager<ApplicationUser>>(
-                () => new UserManager<ApplicationUser>(new UserStore<ApplicationUser>()),
+                () => new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext())),
                 Lifestyle.Scoped);
 
             container.Options.AllowOverridingRegistrations = false;
