@@ -40,6 +40,11 @@ export class AuthenticationService {
           }));
   }
 
+
+  register(username: string, password: string){
+    return this.http.post(`http://localhost:50029/api/Account/Register`,{Email: username, Password: password, ConfirmPassword: password});
+  }
+
   logout() {
       localStorage.removeItem('currentUser');
       this.currentUserSubject.next(null);
