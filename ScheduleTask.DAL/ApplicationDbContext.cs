@@ -22,7 +22,15 @@ namespace ScheduleTask.DAL
         }
     }
 
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    public interface IApplicationDbContext
+    {
+        DbSet<Tasks> Tasks { get; set; }
+        DbSet<User> Users { get; set; }
+
+        int SaveChanges();
+    }
+
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplicationDbContext
     {
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
@@ -13,6 +14,7 @@ using ScheduleTask.BLL.Interfaces;
 using ScheduleTask.BLL.Services;
 using ScheduleTask.DAL;
 using ScheduleTask.DAL.Interfaces;
+using ScheduleTask.DAL.Repositories;
 using SimpleInjector;
 using SimpleInjector.Integration.WebApi;
 using SimpleInjector.Lifestyles;
@@ -30,7 +32,11 @@ namespace Task1
 
             container.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
 
+
+            container.Register<IApplicationDbContext, ApplicationDbContext>(Lifestyle.Scoped);
             container.Register<IDataAccess,DataAccess>(Lifestyle.Scoped);
+            container.Register(typeof(IUserRepository), typeof(UserRepository), Lifestyle.Scoped);
+            container.Register(typeof(ITaskRepository), typeof(TaskRepository), Lifestyle.Scoped);
             container.Register(typeof(IUserService), typeof(UserService), Lifestyle.Scoped);
             container.Register(typeof(ITaskService), typeof(TaskService), Lifestyle.Scoped);
 

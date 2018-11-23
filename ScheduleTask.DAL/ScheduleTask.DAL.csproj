@@ -59,14 +59,16 @@
     <Compile Include="Entities\Task.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="Interfaces\IDataAccess.cs" />
-    <Compile Include="Interfaces\TaskRepository.cs" />
-    <Compile Include="Interfaces\UserRepository.cs" />
+    <Compile Include="Interfaces\ITaskRepository.cs" />
+    <Compile Include="Interfaces\IUserRepository.cs" />
     <Compile Include="Migrations\201811210853532_Initial.cs" />
     <Compile Include="Migrations\201811210853532_Initial.Designer.cs">
       <DependentUpon>201811210853532_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\TaskRepository.cs" />
+    <Compile Include="Repositories\UserRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ScheduleTask.DAL.Interfaces;
+using ScheduleTask.DAL.Repositories;
 
 
 namespace ScheduleTask.DAL
@@ -11,20 +12,22 @@ namespace ScheduleTask.DAL
     public class DataAccess : IDataAccess
     {
         private readonly ApplicationDbContext _db;
-        private TaskRepository _taskService;
-        private UserRepository _userService;
+        private ITaskRepository _taskRepository;
+        private IUserRepository _userRepository;
 
-        public DataAccess()
+        public DataAccess(ITaskRepository taskRepo, IUserRepository userRepo)
         {
             _db = new ApplicationDbContext();
+            _taskRepository = taskRepo;
+            _userRepository = userRepo;
         }
         public ITaskRepository Tasks
         {
             get
             {
-                if (_taskService == null)
-                    _taskService = new TaskRepository(_db);
-                return _taskService;
+                /*if (_taskRepository == null)
+                    _taskRepository = new TaskRepository(_db);*/
+                return _taskRepository;
             }
         }
 
@@ -32,9 +35,9 @@ namespace ScheduleTask.DAL
         {
             get
             {
-                if (_userService == null)
-                    _userService = new UserRepository(_db);
-                return _userService;
+                /*if (_userRepository == null)
+                    _userRepository = new UserRepository(_db);*/
+                return _userRepository;
             }
         }
 

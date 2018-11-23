@@ -1,23 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using ScheduleTask.DAL.Entities;
+using ScheduleTask.DAL.Interfaces;
 
-namespace ScheduleTask.DAL.Interfaces
+namespace ScheduleTask.DAL.Repositories
 {
-    public interface IUserRepository
-    {
-        User GetById(int id);
-        List<User> GetUsers();
-        void AddUser(User user);
-        void UpdateUser(User user);
-        void DeleteUser(int id);
-    }
-
     public class UserRepository : IUserRepository
     {
-        private ApplicationDbContext db;
+        private IApplicationDbContext db;
 
-        public UserRepository(ApplicationDbContext context)
+        public UserRepository(IApplicationDbContext context)
         {
             db = context;
         }

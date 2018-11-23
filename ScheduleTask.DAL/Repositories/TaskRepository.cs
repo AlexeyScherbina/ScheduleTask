@@ -1,26 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization.Formatters;
+using System.Text;
+using System.Threading.Tasks;
 using ScheduleTask.DAL.Entities;
+using ScheduleTask.DAL.Interfaces;
 
-namespace ScheduleTask.DAL.Interfaces
+namespace ScheduleTask.DAL.Repositories
 {
-
-    public interface ITaskRepository
-    {
-        Tasks GetById(int id);
-        List<Tasks> GetTasks();
-        void AddTask(Tasks task);
-        void UpdateTask(Tasks task);
-        void DeleteTask(int id);
-    }
-
     public class TaskRepository : ITaskRepository
     {
 
-        private ApplicationDbContext db;
+        private IApplicationDbContext db;
 
-        public TaskRepository(ApplicationDbContext context)
+        public TaskRepository(IApplicationDbContext context)
         {
             db = context;
         }
@@ -59,7 +52,7 @@ namespace ScheduleTask.DAL.Interfaces
         public void DeleteTask(int id)
         {
             Tasks temp = db.Tasks.FirstOrDefault(x => x.TaskId == id);
-            if(temp.User != null) { temp.User.Tasks.Remove(temp); }
+            if (temp.User != null) { temp.User.Tasks.Remove(temp); }
             db.Tasks.Remove(temp);
             db.SaveChanges();
         }
