@@ -14,11 +14,11 @@ namespace ScheduleTask.BLL.Services
 {
     public class UserService : IUserService
     {
-        IDataAccess Database { get; set; }
+        IRepository<User> _userRepository { get; set; }
 
-        public UserService(IDataAccess db)
+        public UserService(IRepository<User> userRepo)
         {
-            Database = db;
+            _userRepository = userRepo;
         }
 
         public void AddUser(UserDTO user)
@@ -29,27 +29,25 @@ namespace ScheduleTask.BLL.Services
                 FullName = user.FullName,
                 Tasks = new List<Tasks>()
             };
-            Database.Users.AddUser(u);
-            Database.Save();
+            _userRepository.Create(u);
         }
 
         public void DeleteUser(int id)
         {
-            Database.Users.DeleteUser(id);
-            Database.Save();
+            _userRepository.Delete(id);
         }
 
         public UserDTO GetById(int id)
         {
             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<User, UserDTO>()).CreateMapper();
-            return mapper.Map<User, UserDTO>(Database.Users.GetById(id));
+            return mapper.Map<User, UserDTO>(_userRepository.GetById(id));
            
         }
 
         public IEnumerable<UserDTO> GetUsers()
         {
             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<User, UserDTO>()).CreateMapper();
-            return mapper.Map<IEnumerable<User>, IEnumerable<UserDTO>>(Database.Users.GetUsers());
+            return mapper.Map<IEnumerable<User>, IEnumerable<UserDTO>>(_userRepository.GetAll());
             
         }
     }

@@ -8,7 +8,7 @@ using ScheduleTask.DAL.Interfaces;
 
 namespace ScheduleTask.DAL.Repositories
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository : IRepository<User>
     {
         private IApplicationDbContext db;
 
@@ -22,25 +22,25 @@ namespace ScheduleTask.DAL.Repositories
             return db.Users.FirstOrDefault(x => x.UserId == id);
         }
 
-        public List<User> GetUsers()
+        public IEnumerable<User> GetAll()
         {
             return db.Users.ToList();
         }
 
-        public void AddUser(User user)
+        public void Create(User user)
         {
             db.Users.Add(user);
             db.SaveChanges();
         }
 
-        public void UpdateUser(User user)
+        public void Update(User user)
         {
             User temp = db.Users.FirstOrDefault(x => x.UserId == user.UserId);
             temp.FullName = user.FullName;
             db.SaveChanges();
         }
 
-        public void DeleteUser(int id)
+        public void Delete(int id)
         {
             User temp = db.Users.FirstOrDefault(x => x.UserId == id);
 

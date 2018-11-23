@@ -55,12 +55,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationDbContext.cs" />
-    <Compile Include="DataAccess.cs" />
     <Compile Include="Entities\Task.cs" />
     <Compile Include="Entities\User.cs" />
-    <Compile Include="Interfaces\IDataAccess.cs" />
-    <Compile Include="Interfaces\ITaskRepository.cs" />
-    <Compile Include="Interfaces\IUserRepository.cs" />
+    <Compile Include="Interfaces\IRepository.cs" />
     <Compile Include="Migrations\201811210853532_Initial.cs" />
     <Compile Include="Migrations\201811210853532_Initial.Designer.cs">
       <DependentUpon>201811210853532_Initial.cs</DependentUpon>

@@ -8,7 +8,7 @@ using ScheduleTask.DAL.Interfaces;
 
 namespace ScheduleTask.DAL.Repositories
 {
-    public class TaskRepository : ITaskRepository
+    public class TaskRepository : IRepository<Tasks>
     {
 
         private IApplicationDbContext db;
@@ -24,18 +24,18 @@ namespace ScheduleTask.DAL.Repositories
             return db.Tasks.FirstOrDefault(x => x.TaskId == id);
         }
 
-        public List<Tasks> GetTasks()
+        public IEnumerable<Tasks> GetAll()
         {
             return db.Tasks.ToList();
         }
 
-        public void AddTask(Tasks task)
+        public void Create(Tasks task)
         {
             db.Tasks.Add(task);
             db.SaveChanges();
         }
 
-        public void UpdateTask(Tasks task)
+        public void Update(Tasks task)
         {
             Tasks temp = db.Tasks.FirstOrDefault(x => x.TaskId == task.TaskId);
             if (task.Day != null) { temp.Day = task.Day; }
@@ -49,7 +49,7 @@ namespace ScheduleTask.DAL.Repositories
             db.SaveChanges();
         }
 
-        public void DeleteTask(int id)
+        public void Delete(int id)
         {
             Tasks temp = db.Tasks.FirstOrDefault(x => x.TaskId == id);
             if (temp.User != null) { temp.User.Tasks.Remove(temp); }

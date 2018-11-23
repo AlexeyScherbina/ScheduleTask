@@ -15,11 +15,13 @@ namespace ScheduleTask.BLL.Services
 {
     public class TaskService : ITaskService
     {
-        IDataAccess Database { get; set; }
+        IRepository<Tasks> _taskRepository { get; set; }
+        IRepository<User> _userRepository { get; set; }
 
-        public TaskService(IDataAccess db)
+        public TaskService(IRepository<Tasks> taskRepo, IRepository<User> userRepo)
         {
-            Database = db;
+            _taskRepository = taskRepo;
+            _userRepository = userRepo;
         }
 
         public void AddTask(TaskDTO task)
@@ -32,51 +34,47 @@ namespace ScheduleTask.BLL.Services
                 User = null
             };
 
-            Database.Tasks.AddTask(t);
-            Database.Save();
+            _taskRepository.Create(t);
         }
 
         public void AssignDay(TaskDTO task)
         {
             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<TaskDTO, Tasks>()).CreateMapper();
-            Database.Tasks.UpdateTask(mapper.Map<TaskDTO, Tasks>(task));
-            Database.Save();
+            _taskRepository.Update(mapper.Map<TaskDTO, Tasks>(task));
         }
 
         public void AssignUser(int taskId, int userId)
         {
-            Tasks t = Database.Tasks.GetById(taskId);
+            Tasks t = _taskRepository.GetById(taskId);
             User u;
             if (userId == 0)
             {
-                u = Database.Users.GetById(t.User.UserId);
+                u = _userRepository.GetById(t.User.UserId);
                 u.Tasks.Remove(t);
             }
             else
             {
-                u = Database.Users.GetById(userId);
+                u = _userRepository.GetById(userId);
                 t.User = u;
             }
-            Database.Tasks.UpdateTask(t);
-            Database.Save();
+            _taskRepository.Update(t);
         }
 
         public void DeleteTask(int id)
         {
-            Database.Tasks.DeleteTask(id);
-            Database.Save();
+            _taskRepository.Delete(id);
         }
 
         public TaskDTO GetById(int id)
         {
             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<Tasks, TaskDTO>()).CreateMapper();
-            return mapper.Map<Tasks, TaskDTO>(Database.Tasks.GetById(id));
+            return mapper.Map<Tasks, TaskDTO>(_taskRepository.GetById(id));
         }
 
         public IEnumerable<TaskDTO> GetTasks()
         {
             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<Tasks, TaskDTO>()).CreateMapper();
-            return mapper.Map<IEnumerable<Tasks>, IEnumerable<TaskDTO>>(Database.Tasks.GetTasks());
+            return mapper.Map<IEnumerable<Tasks>, IEnumerable<TaskDTO>>(_taskRepository.GetAll());
         }
     }
 }
