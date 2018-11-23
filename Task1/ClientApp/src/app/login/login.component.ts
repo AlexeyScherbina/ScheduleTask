@@ -30,7 +30,7 @@ export class LoginComponent implements OnInit {
                 this.router.navigate(['home']);
             },
             error => {
-              alert('error');
+              alert(error.error.error_description);
             });
 }
 

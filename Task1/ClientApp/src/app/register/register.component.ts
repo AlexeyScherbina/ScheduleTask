@@ -33,7 +33,7 @@ export class RegisterComponent implements OnInit {
                     this.router.navigate(['home']);
                 },
                 error => {
-                  alert(error.error.ModelState['']);
+                  alert(error.error.error_description);
                 });
             },
             error => {
