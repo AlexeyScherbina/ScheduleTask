@@ -3,7 +3,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
-using Task1.Models;
+using ScheduleTask.DAL;
 
 namespace Task1
 {

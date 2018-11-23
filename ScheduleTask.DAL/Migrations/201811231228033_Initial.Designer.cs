@@ -13,7 +13,7 @@ namespace ScheduleTask.DAL.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201811210853532_Initial"; }
+            get { return "201811231228033_Initial"; }
         }
         
         string IMigrationMetadata.Source

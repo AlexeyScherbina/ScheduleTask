@@ -8,6 +8,7 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
 using Microsoft.Owin.Security.OAuth;
 using Owin;
+using ScheduleTask.DAL;
 using Task1.Providers;
 using Task1.Models;
 

@@ -10,11 +10,15 @@ using System.Web.Routing;
 using System.Web.Security;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.Owin.Security;
+using Microsoft.Owin.Security.DataHandler;
+using Microsoft.Owin.Security.DataHandler.Encoder;
+using Microsoft.Owin.Security.DataHandler.Serializer;
+using Microsoft.Owin.Security.DataProtection;
 using ScheduleTask.BLL.Interfaces;
 using ScheduleTask.BLL.Services;
 using ScheduleTask.DAL;
 using ScheduleTask.DAL.Interfaces;
-using ScheduleTask.DAL.Repositories;
 using SimpleInjector;
 using SimpleInjector.Integration.WebApi;
 using SimpleInjector.Lifestyles;
@@ -37,6 +41,28 @@ namespace Task1
             container.Register(typeof(IRepository<>),typeof(IRepository<>).Assembly, Lifestyle.Scoped);
             container.Register(typeof(IUserService), typeof(UserService), Lifestyle.Scoped);
             container.Register(typeof(ITaskService), typeof(TaskService), Lifestyle.Scoped);
+
+            container.Options.AllowOverridingRegistrations = true;
+
+            container.Register<IUserStore<ApplicationUser>>(() => new UserStore<ApplicationUser>(), Lifestyle.Scoped);
+            container.Register<ApplicationUserManager>(
+                () => new ApplicationUserManager(new UserStore<ApplicationUser>()), Lifestyle.Scoped
+            );
+            container.Register<UserStore<ApplicationUser>>(() => new UserStore<ApplicationUser>(), Lifestyle.Scoped);
+            container.Register<UserManager<ApplicationUser, string>>(
+                () => new UserManager<ApplicationUser, string>(new UserStore<ApplicationUser>()),
+                Lifestyle.Scoped);
+
+            container.Register<ISecureDataFormat<AuthenticationTicket>, SecureDataFormat<AuthenticationTicket>>(Lifestyle.Scoped);
+            container.Register<ITextEncoder, Base64UrlTextEncoder>(Lifestyle.Scoped);
+            container.Register<IDataSerializer<AuthenticationTicket>, TicketSerializer>(Lifestyle.Scoped);
+            container.Register<IDataProtector>(() => new Microsoft.Owin.Security.DataProtection.DpapiDataProtectionProvider().Create("ASP.NET Identity"), Lifestyle.Scoped);
+            //container.Register(() => HttpContext.Current.GetOwinContext().Authentication, Lifestyle.Scoped);
+            container.Register<UserManager<ApplicationUser>>(
+                () => new UserManager<ApplicationUser>(new UserStore<ApplicationUser>()),
+                Lifestyle.Scoped);
+
+            container.Options.AllowOverridingRegistrations = false;
 
             container.Verify();
 
