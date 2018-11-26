@@ -133,7 +133,6 @@ export class HomeComponent implements OnInit {
     });
   }
   AddUser(){
-    console.log(this.taskArray);
     let user: User = {
       UserId: undefined,
       FullName: this.newUser,

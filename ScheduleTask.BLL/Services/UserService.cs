@@ -23,13 +23,8 @@ namespace ScheduleTask.BLL.Services
 
         public void AddUser(UserDTO user)
         {
-            User u = new User
-            {
-                UserId = user.UserId,
-                FullName = user.FullName,
-                Tasks = new List<Tasks>()
-            };
-            _userRepository.Create(u);
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<User, UserDTO>()).CreateMapper();
+            _userRepository.Create(mapper.Map<UserDTO, User>(user));
         }
 
         public void DeleteUser(int id)

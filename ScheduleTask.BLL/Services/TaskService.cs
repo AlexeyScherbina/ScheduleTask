@@ -26,15 +26,8 @@ namespace ScheduleTask.BLL.Services
 
         public void AddTask(TaskDTO task)
         {
-            Tasks t = new Tasks
-            {
-                Name = task.Name,
-                Description = task.Description,
-                Day = task.Day,
-                User = null
-            };
-
-            _taskRepository.Create(t);
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<TaskDTO, Tasks>()).CreateMapper();
+            _taskRepository.Create(mapper.Map<TaskDTO, Tasks>(task));
         }
 
         public void AssignDay(TaskDTO task)
