@@ -31,6 +31,11 @@ namespace Task1.Controllers
                 return BadRequest(ModelState);
             }
 
+            if (task == null)
+            {
+                return BadRequest("Empty data sent.");
+            }
+
             TaskDTO t = new TaskDTO
             {
                 Name = task.Name,
@@ -90,6 +95,11 @@ namespace Task1.Controllers
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
+            }
+
+            if (task == null)
+            {
+                return BadRequest("Empty data sent.");
             }
 
             TaskDTO t = new TaskDTO

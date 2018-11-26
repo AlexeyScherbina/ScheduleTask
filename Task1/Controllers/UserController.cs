@@ -31,6 +31,11 @@ namespace Task1.Controllers
                 return BadRequest(ModelState);
             }
 
+            if (user == null)
+            {
+                return BadRequest("Empty data sent.");
+            }
+
             UserDTO u = new UserDTO
             {
                 FullName = user.FullName,
