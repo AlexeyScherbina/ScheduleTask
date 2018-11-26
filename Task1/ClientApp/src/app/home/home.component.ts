@@ -24,26 +24,35 @@ export class HomeComponent implements OnInit {
   loading = false;
 
   onChange(value, task:Task){
-    this.taskService.AssignUser(task.TaskId, value).subscribe(result => {});
+    this.taskService.AssignUser(task.TaskId, value).subscribe(result => {},
+      error => {
+        alert(error.error.Message);
+      });
   }
 
   drop(event: CdkDragDrop<string[]>) {
     if (event.previousContainer !== event.container) {
       transferArrayItem(event.previousContainer.data,event.container.data,
-        event.previousIndex, event.currentIndex)
+        event.previousIndex, event.currentIndex);
 
       var container = 5;
-      switch(event.container.id){
-        case "cdk-drop-list-0":event.container.data[event.currentIndex]['Day'] = ''; container = 5; break;
-        case "cdk-drop-list-1":event.container.data[event.currentIndex]['Day'] = 'Monday'; container = 0; break;
-        case "cdk-drop-list-2":event.container.data[event.currentIndex]['Day'] = 'Tuesday'; container = 1; break;
-        case "cdk-drop-list-3":event.container.data[event.currentIndex]['Day'] = 'Wednesday'; container = 2; break;
-        case "cdk-drop-list-4":event.container.data[event.currentIndex]['Day'] = 'Thursday'; container = 3; break;
-        case "cdk-drop-list-5":event.container.data[event.currentIndex]['Day'] = 'Friday'; container = 4; break;
+      var value = parseInt(event.container.id.toString().substr(event.container.id.length-1,1)) % 6;
+
+      switch(value){
+        case 0:event.container.data[event.currentIndex]['Day'] = ''; container = 5; break;
+        case 1:event.container.data[event.currentIndex]['Day'] = 'Monday'; container = 0; break;
+        case 2:event.container.data[event.currentIndex]['Day'] = 'Tuesday'; container = 1; break;
+        case 3:event.container.data[event.currentIndex]['Day'] = 'Wednesday'; container = 2; break;
+        case 4:event.container.data[event.currentIndex]['Day'] = 'Thursday'; container = 3; break;
+        case 5:event.container.data[event.currentIndex]['Day'] = 'Friday'; container = 4; break;
         default: break;
       }
+
       this.taskService.AssignDay(this.taskArray[container][event.currentIndex])
-      .subscribe(result => {});
+      .subscribe(result => {},
+        error => {
+          alert(error.error.Message);
+        });
     }
   }
 
@@ -67,7 +76,6 @@ export class HomeComponent implements OnInit {
           default: this.taskArray[5].push(element); break;
         }
       });
-      console.log(this.taskArray);
     });
   }
   GetUsers(){
@@ -75,11 +83,12 @@ export class HomeComponent implements OnInit {
   }
 
   constructor(private authService : AuthenticationService, private userService : UserService, private taskService : TaskService) { 
-    this.GetTasks();
-    this.GetUsers();
+    
   }
 
   ngOnInit() {
+    this.GetTasks();
+    this.GetUsers();
   }
 
   logOut(){
@@ -90,14 +99,18 @@ export class HomeComponent implements OnInit {
     this.taskService.DeleteTask(task).subscribe(result => {
       this.GetTasks();
       this.GetUsers();
-      //this.taskArray[5].splice(this.taskArray[5].indexOf(task),1);
+    },
+    error => {
+      alert(error.error.Message);
     });
   }
   DeleteUser(user:User){
     this.userService.DeleteUser(user).subscribe(result => {
       this.GetTasks();
       this.GetUsers();
-      //this.users.splice(this.users.indexOf(user),1);
+    },
+    error => {
+      alert(error.error.Message);
     });
   }
 
@@ -114,6 +127,9 @@ export class HomeComponent implements OnInit {
       this.loading = false;
       this.newTask = '';
       this.GetTasks();
+    },
+    error => {
+      alert(error.error.Message);
     });
   }
   AddUser(){
@@ -127,9 +143,10 @@ export class HomeComponent implements OnInit {
     this.userService.AddUser(user).subscribe(result =>{
       this.loading = false;
       this.newUser = '';
-      console.log(this.taskArray);
       this.GetUsers();
-      console.log(this.taskArray);
+    },
+    error => {
+      alert(error.error.Message);
     });
   }
 

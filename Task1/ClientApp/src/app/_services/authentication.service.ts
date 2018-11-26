@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, from } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { Config } from '../url.config';
 
 import { Auth } from '../_models/auth';
 
@@ -29,7 +30,7 @@ export class AuthenticationService {
     body.set('username', username);
     body.set('password', password);
     body.set('grant_type', grant_type);
-      return this.http.post<any>(`http://localhost:50029/token`, body.toString())
+      return this.http.post<any>(Config.baseUrl +  `/token`, body.toString())
           .pipe(map(user => {
               if (user && user.access_token) {
                   localStorage.setItem('currentUser', JSON.stringify(user));
@@ -42,7 +43,7 @@ export class AuthenticationService {
 
 
   register(username: string, password: string){
-    return this.http.post(`http://localhost:50029/api/Account/Register`,{Email: username, Password: password, ConfirmPassword: password});
+    return this.http.post(Config.baseUrl +  `/api/Account/Register`,{Email: username, Password: password, ConfirmPassword: password});
   }
 
   logout() {

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Task } from '../_models/task';
+import { Config } from '../url.config'
 
 @Injectable({
   providedIn: 'root'
@@ -10,18 +11,18 @@ export class TaskService {
   constructor(private http: HttpClient) { }
 
   GetTasks(){
-    return this.http.get<Task[]>(`http://localhost:50029/api/Task/GetTasks`);
+    return this.http.get<Task[]>(Config.baseUrl +  `/api/Task/GetTasks`);
   }
   AddTask(task: Task){
-    return this.http.post(`http://localhost:50029/api/Task/AddTask`, task);
+    return this.http.post(Config.baseUrl +  `/api/Task/AddTask`, task);
   }
   DeleteTask(task: Task){
-    return this.http.delete(`http://localhost:50029/api/Task/DeleteTask/` + task.TaskId );
+    return this.http.delete(Config.baseUrl +  `/api/Task/DeleteTask/` + task.TaskId );
   }
   AssignDay(task: Task){
-    return this.http.post(`http://localhost:50029/api/Task/AssignDay`, task );
+    return this.http.post(Config.baseUrl +  `/api/Task/AssignDay`, task );
   }
   AssignUser(tid: number, uid: number){
-    return this.http.post(`http://localhost:50029/api/Task/AssignUser`, {taskId: tid, userId: uid} );
+    return this.http.post(Config.baseUrl +  `/api/Task/AssignUser`, {taskId: tid, userId: uid} );
   }
 }

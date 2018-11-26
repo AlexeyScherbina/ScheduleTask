@@ -32,9 +32,9 @@ namespace Task1.Controllers
 
         public IHttpActionResult AddUser(UserViewModel user)
         {
-            if (user == null)
+            if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest(ModelState);
             }
 
             UserDTO u = new UserDTO
@@ -42,24 +42,32 @@ namespace Task1.Controllers
                 FullName = user.FullName,
                 Tasks = new List<TaskDTO>()
             };
-            userService.AddUser(u);
+            try
+            {
+                userService.AddUser(u);
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+
             return Ok();
         }
 
         public IHttpActionResult DeleteUser(int id)
         {
-            if (id == null)
+            if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest(ModelState);
             }
 
             try
             {
                 userService.DeleteUser(id);
             }
-            catch
+            catch(Exception e)
             {
-                return BadRequest();
+                return InternalServerError(e);
             }
             return Ok();
         }

@@ -30,16 +30,9 @@ namespace Task1
     {
         protected void Application_Start()
         {
-
-
             var container = new Container();
 
             container.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
-
-
-
-
-
 
             container.Register<IApplicationDbContext>(() => new ApplicationDbContext(), Lifestyle.Scoped);
             container.Register(typeof(IRepository<>), typeof(IRepository<>).Assembly, Lifestyle.Scoped);
@@ -61,7 +54,6 @@ namespace Task1
             container.Register<ITextEncoder, Base64UrlTextEncoder>(Lifestyle.Scoped);
             container.Register<IDataSerializer<AuthenticationTicket>, TicketSerializer>(Lifestyle.Scoped);
             container.Register<IDataProtector>(() => new Microsoft.Owin.Security.DataProtection.DpapiDataProtectionProvider().Create("ASP.NET Identity"), Lifestyle.Scoped);
-            //container.Register(() => HttpContext.Current.GetOwinContext().Authentication, Lifestyle.Scoped);
             container.Register<UserManager<ApplicationUser>>(
                 () => new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext())),
                 Lifestyle.Scoped);

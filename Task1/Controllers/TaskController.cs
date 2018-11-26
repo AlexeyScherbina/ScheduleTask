@@ -32,9 +32,9 @@ namespace Task1.Controllers
 
         public IHttpActionResult AddTask(TaskViewModel task)
         {
-            if (task == null)
+            if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest(ModelState);
             }
 
             TaskDTO t = new TaskDTO
@@ -44,51 +44,58 @@ namespace Task1.Controllers
                 Day = task.Day,
                 User = null
             };
-            taskService.AddTask(t);
+            try
+            {
+                taskService.AddTask(t);
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+
             return Ok();
         }
 
         public IHttpActionResult DeleteTask(int id)
         {
-            if (id == null)
+            if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest(ModelState);
             }
-
             try
             {
                 taskService.DeleteTask(id);
             }
-            catch
+            catch (Exception e)
             {
-                return BadRequest();
+                return InternalServerError(e);
             }
             return Ok();
         }
     
         public IHttpActionResult AssignUser(AssignViewModel avm)
         {
-            if (avm == null)
+            if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest(ModelState);
             }
 
             try
             {
                 taskService.AssignUser(avm.TaskId, avm.UserId);
             }
-            catch
+            catch (Exception e)
             {
-                return BadRequest();
+                return InternalServerError(e);
             }
             return Ok();
         }
 
         public IHttpActionResult AssignDay(TaskViewModel task)
         {
-            if (task == null)
+            if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest(ModelState);
             }
 
             TaskDTO t = new TaskDTO
@@ -98,13 +105,14 @@ namespace Task1.Controllers
                 Description = task.Description,
                 Name = task.Name
             };
+
             try
             {
                 taskService.AssignDay(t);
             }
-            catch
+            catch (Exception e)
             {
-                return BadRequest();
+                return InternalServerError(e);
             }
             return Ok();
         }
