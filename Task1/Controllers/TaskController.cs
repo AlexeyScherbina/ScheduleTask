@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
-using System.Web.Http.Results;
 using AutoMapper;
 using ScheduleTask.BLL.DTO;
 using ScheduleTask.BLL.Interfaces;
-using ScheduleTask.DAL.Entities;
 using Task1.Models;
 
 namespace Task1.Controllers
