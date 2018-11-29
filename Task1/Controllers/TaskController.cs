@@ -78,7 +78,10 @@ namespace Task1.Controllers
             {
                 return BadRequest(ModelState);
             }
-
+            if (avm == null)
+            {
+                return BadRequest("Empty data sent.");
+            }
             try
             {
                 taskService.AssignUser(avm.TaskId, avm.UserId);
