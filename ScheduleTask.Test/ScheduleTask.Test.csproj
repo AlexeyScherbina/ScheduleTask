@@ -92,9 +92,9 @@
       <Project>{4AC8FEA2-E19D-41AA-8EF8-19659A189A3C}</Project>
       <Name>ScheduleTask.DAL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Task1\Task1.csproj">
-      <Project>{950df19b-fd3c-4682-8280-22cdc8fe2f83}</Project>
-      <Name>Task1</Name>
+    <ProjectReference Include="..\ScheduleTask.WebAPI\ScheduleTask.WebAPI.csproj">
+      <Project>{950DF19B-FD3C-4682-8280-22CDC8FE2F83}</Project>
+      <Name>ScheduleTask.WebAPI</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
