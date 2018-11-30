@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http.Results;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using MvcContrib.TestHelper;
 using ScheduleTask.BLL.DTO;
 using ScheduleTask.BLL.Services;
 using ScheduleTask.DAL;
@@ -32,12 +33,12 @@ namespace ScheduleTask.Test
             {
                 Name = "TEST_TASK"
             });
-            Assert.IsTrue(result is OkResult);
+            result.ToString().ShouldBe(typeof(OkResult).ToString());
 
             IEnumerable<TaskViewModel> t = tc.GetTasks();
             var task = t.FirstOrDefault();
-            
-            Assert.AreEqual("TEST_TASK", task.Name);
+
+            task.Name.ShouldBe("TEST_TASK");
         }
 
         [TestMethod]
@@ -47,12 +48,12 @@ namespace ScheduleTask.Test
             {
                 FullName = "TEST_USER"
             });
-            Assert.IsTrue(result is OkResult);
+            result.ToString().ShouldBe(typeof(OkResult).ToString());
 
             IEnumerable<UserViewModel> u = uc.GetUsers();
             var user = u.FirstOrDefault();
 
-            Assert.AreEqual("TEST_USER", user.FullName);
+            user.FullName.ShouldBe("TEST_USER");
         }
 
         [TestMethod]
@@ -68,12 +69,12 @@ namespace ScheduleTask.Test
                 TaskId = task.TaskId,
                 UserId = user.UserId
             });
-            Assert.IsTrue(result is OkResult);
+            result.ToString().ShouldBe(typeof(OkResult).ToString());
 
             t = tc.GetTasks();
             task = t.FirstOrDefault();
 
-            Assert.AreEqual("TEST_USER", task.User.FullName);
+            task.User.FullName.ShouldBe("TEST_USER");
         }
 
         [TestMethod]
@@ -91,12 +92,12 @@ namespace ScheduleTask.Test
                 Day = day,
                 User = task.User
             });
-            Assert.IsTrue(result is OkResult);
+            result.ToString().ShouldBe(typeof(OkResult).ToString());
 
             t = tc.GetTasks();
             task = t.FirstOrDefault();
 
-            Assert.AreEqual("Monday", task.Day);
+            task.Day.ShouldBe("Monday");
         }
 
         [TestMethod]
@@ -111,7 +112,7 @@ namespace ScheduleTask.Test
 
             t = tc.GetTasks();
 
-            Assert.AreEqual(0, t.Count());
+            t.Count().ShouldBe(0);
         }
 
         [TestMethod]
@@ -126,7 +127,7 @@ namespace ScheduleTask.Test
 
             u = uc.GetUsers();
 
-            Assert.AreEqual(0, u.Count());
+            u.Count().ShouldBe(0);
         }
     }
 }

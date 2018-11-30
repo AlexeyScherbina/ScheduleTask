@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http.Results;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using MvcContrib.TestHelper;
 using ScheduleTask.BLL.Services;
 using ScheduleTask.DAL;
 using ScheduleTask.DAL.Repositories;
@@ -29,13 +30,13 @@ namespace ScheduleTask.Test
         public void AddTask_Null_BadRequest()
         {
             var result = tc.AddTask(null);
-            Assert.IsTrue(result is BadRequestErrorMessageResult);
+            result.ToString().ShouldBe(typeof(BadRequestErrorMessageResult).ToString());
         }
         [TestMethod]
         public void AddUser_Null_BadRequest()
         {
             var result = uc.AddUser(null);
-            Assert.IsTrue(result is BadRequestErrorMessageResult);
+            result.ToString().ShouldBe(typeof(BadRequestErrorMessageResult).ToString());
         }
         [TestMethod]
         public void AssignUser_UnexistingIds_ExceptionResult()
@@ -45,31 +46,31 @@ namespace ScheduleTask.Test
                 TaskId = 0,
                 UserId = 0
             });
-            Assert.IsTrue(result is ExceptionResult);
+            result.ToString().ShouldBe(typeof(ExceptionResult).ToString());
         }
         [TestMethod]
         public void AssignUser_Null_BadRequest()
         {
             var result = tc.AssignUser(null);
-            Assert.IsTrue(result is BadRequestErrorMessageResult);
+            result.ToString().ShouldBe(typeof(BadRequestErrorMessageResult).ToString());
         }
         [TestMethod]
         public void AssignDay_Null_BadRequest()
         {
             var result = tc.AssignDay(null);
-            Assert.IsTrue(result is BadRequestErrorMessageResult);
+            result.ToString().ShouldBe(typeof(BadRequestErrorMessageResult).ToString());
         }
         [TestMethod]
         public void DeleteTask_UnexistingId_ExceptionResult()
         {
             var result = tc.DeleteTask(0);
-            Assert.IsTrue(result is ExceptionResult);
+            result.ToString().ShouldBe(typeof(ExceptionResult).ToString());
         }
         [TestMethod]
         public void DeleteUser_UnexistingId_ExceptionResult()
         {
             var result = uc.DeleteUser(0);
-            Assert.IsTrue(result is ExceptionResult);
+            result.ToString().ShouldBe(typeof(ExceptionResult).ToString());
         }
 
     }
