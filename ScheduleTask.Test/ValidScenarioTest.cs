@@ -33,7 +33,7 @@ namespace ScheduleTask.Test
             {
                 Name = "TEST_TASK"
             });
-            result.ToString().ShouldBe(typeof(OkResult).ToString());
+            (result is OkResult).ShouldBe(true);
 
             IEnumerable<TaskViewModel> t = tc.GetTasks();
             var task = t.FirstOrDefault();
@@ -48,7 +48,7 @@ namespace ScheduleTask.Test
             {
                 FullName = "TEST_USER"
             });
-            result.ToString().ShouldBe(typeof(OkResult).ToString());
+            (result is OkResult).ShouldBe(true);
 
             IEnumerable<UserViewModel> u = uc.GetUsers();
             var user = u.FirstOrDefault();
@@ -69,7 +69,7 @@ namespace ScheduleTask.Test
                 TaskId = task.TaskId,
                 UserId = user.UserId
             });
-            result.ToString().ShouldBe(typeof(OkResult).ToString());
+            (result is OkResult).ShouldBe(true);
 
             t = tc.GetTasks();
             task = t.FirstOrDefault();
@@ -92,7 +92,7 @@ namespace ScheduleTask.Test
                 Day = day,
                 User = task.User
             });
-            result.ToString().ShouldBe(typeof(OkResult).ToString());
+            (result is OkResult).ShouldBe(true);
 
             t = tc.GetTasks();
             task = t.FirstOrDefault();

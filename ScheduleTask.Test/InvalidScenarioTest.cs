@@ -30,13 +30,13 @@ namespace ScheduleTask.Test
         public void AddTask_Null_BadRequest()
         {
             var result = tc.AddTask(null);
-            result.ToString().ShouldBe(typeof(BadRequestErrorMessageResult).ToString());
+            (result is BadRequestErrorMessageResult).ShouldBe(true);
         }
         [TestMethod]
         public void AddUser_Null_BadRequest()
         {
             var result = uc.AddUser(null);
-            result.ToString().ShouldBe(typeof(BadRequestErrorMessageResult).ToString());
+            (result is BadRequestErrorMessageResult).ShouldBe(true);
         }
         [TestMethod]
         public void AssignUser_UnexistingIds_ExceptionResult()
@@ -46,31 +46,31 @@ namespace ScheduleTask.Test
                 TaskId = 0,
                 UserId = 0
             });
-            result.ToString().ShouldBe(typeof(ExceptionResult).ToString());
+            (result is ExceptionResult).ShouldBe(true);
         }
         [TestMethod]
         public void AssignUser_Null_BadRequest()
         {
             var result = tc.AssignUser(null);
-            result.ToString().ShouldBe(typeof(BadRequestErrorMessageResult).ToString());
+            (result is BadRequestErrorMessageResult).ShouldBe(true);
         }
         [TestMethod]
         public void AssignDay_Null_BadRequest()
         {
             var result = tc.AssignDay(null);
-            result.ToString().ShouldBe(typeof(BadRequestErrorMessageResult).ToString());
+            (result is BadRequestErrorMessageResult).ShouldBe(true);
         }
         [TestMethod]
         public void DeleteTask_UnexistingId_ExceptionResult()
         {
             var result = tc.DeleteTask(0);
-            result.ToString().ShouldBe(typeof(ExceptionResult).ToString());
+            (result is ExceptionResult).ShouldBe(true);
         }
         [TestMethod]
         public void DeleteUser_UnexistingId_ExceptionResult()
         {
             var result = uc.DeleteUser(0);
-            result.ToString().ShouldBe(typeof(ExceptionResult).ToString());
+            (result is ExceptionResult).ShouldBe(true);
         }
 
     }
