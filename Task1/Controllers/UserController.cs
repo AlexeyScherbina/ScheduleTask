@@ -1,50 +1,74 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
-using System.Web.Http.Results;
+using AutoMapper;
+using ScheduleTask.BLL.DTO;
+using ScheduleTask.BLL.Interfaces;
 using Task1.Models;
-using Task1.Services;
 
 namespace Task1.Controllers
 {
     [Authorize]
     public class UserController : ApiController
     {
-        private IUserService _us;
+        private readonly IUserService userService;
 
         public UserController(IUserService us)
         {
-            _us = us;
+            userService = us;
         }
 
-        [HttpGet]
-        public IEnumerable<User> GetUsers()
+        public IEnumerable<UserViewModel> GetUsers()
         {
-            return _us.GetUsers();
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<UserDTO, UserViewModel>()).CreateMapper();
+            return mapper.Map<IEnumerable<UserDTO>, IEnumerable<UserViewModel>>(userService.GetUsers());
         }
 
-        [HttpPost]
-        public bool AddUser(User user)
+        public IHttpActionResult AddUser(UserViewModel user)
         {
-            _us.AddUser(user);
-            return true;
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (user == null)
+            {
+                return BadRequest("Empty data sent.");
+            }
+
+            UserDTO u = new UserDTO
+            {
+                FullName = user.FullName,
+                Tasks = new List<TaskDTO>()
+            };
+            try
+            {
+                userService.AddUser(u);
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+
+            return Ok();
         }
 
-        [HttpPut]
-        public bool UpdateUser(User user)
+        public IHttpActionResult DeleteUser(int id)
         {
-            _us.UpdateUser(user);
-            return true;
-        }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-        [HttpDelete]
-        public bool DeleteUser(User user)
-        {
-            _us.DeleteUser(user.UserId);
-            return true;
+            try
+            {
+                userService.DeleteUser(id);
+            }
+            catch(Exception e)
+            {
+                return InternalServerError(e);
+            }
+            return Ok();
         }
     }
 }

@@ -1,54 +1,127 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
+using AutoMapper;
+using ScheduleTask.BLL.DTO;
+using ScheduleTask.BLL.Interfaces;
 using Task1.Models;
-using Task1.Services;
 
 namespace Task1.Controllers
 {
+    [Authorize]
     public class TaskController : ApiController
     {
-        private ITaskService _ts;
+        private readonly ITaskService taskService;
 
         public TaskController(ITaskService ts)
         {
-            _ts = ts;
+            taskService = ts;
         }
 
-        //[HttpGet]
-        public IEnumerable<Tasks> GetTasks()
+        public IEnumerable<TaskViewModel> GetTasks()
         {
-            return _ts.GetTasks();
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<TaskDTO, TaskViewModel>()).CreateMapper();
+            return mapper.Map<IEnumerable<TaskDTO>, IEnumerable<TaskViewModel>>(taskService.GetTasks());
         }
 
-                public bool AddTask(Tasks task)
+        public IHttpActionResult AddTask(TaskViewModel task)
         {
-            _ts.AddTask(task);
-            return true;
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (task == null)
+            {
+                return BadRequest("Empty data sent.");
+            }
+
+            TaskDTO t = new TaskDTO
+            {
+                Name = task.Name,
+                Description = task.Description,
+                Day = task.Day,
+                User = null
+            };
+            try
+            {
+                taskService.AddTask(t);
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+
+            return Ok();
         }
 
-        //[HttpPut]
-        public bool UpdateTask(Tasks task)
+        public IHttpActionResult DeleteTask(int id)
         {
-            _ts.UpdateTask(task);
-            return true;
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                taskService.DeleteTask(id);
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+            return Ok();
+        }
+    
+        public IHttpActionResult AssignUser(AssignViewModel avm)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            if (avm == null)
+            {
+                return BadRequest("Empty data sent.");
+            }
+            try
+            {
+                taskService.AssignUser(avm.TaskId, avm.UserId);
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+            return Ok();
         }
 
-        //[HttpDelete]
-        public bool DeleteTask(Tasks task)
+        public IHttpActionResult AssignDay(TaskViewModel task)
         {
-            _ts.DeleteTask(task.TaskId);
-            return true;
-        }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-        
-        public bool AssignUser(AssignViewModel avm)
-        {
-            _ts.AssignUser(avm.TaskId,avm.UserId);
-            return true;
+            if (task == null)
+            {
+                return BadRequest("Empty data sent.");
+            }
+
+            TaskDTO t = new TaskDTO
+            {
+                TaskId = task.TaskId,
+                Day = task.Day,
+                Description = task.Description,
+                Name = task.Name
+            };
+
+            try
+            {
+                taskService.AssignDay(t);
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+            return Ok();
         }
     }
 }

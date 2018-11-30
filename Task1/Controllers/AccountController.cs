@@ -6,13 +6,13 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
-using System.Web.Http.ModelBinding;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
+using ScheduleTask.DAL;
 using Task1.Models;
 using Task1.Providers;
 using Task1.Results;
@@ -26,6 +26,7 @@ namespace Task1.Controllers
         private const string LocalLoginProvider = "Local";
         private ApplicationUserManager _userManager;
 
+       
 
         public AccountController(ApplicationUserManager userManager,
             ISecureDataFormat<AuthenticationTicket> accessTokenFormat)
@@ -33,7 +34,6 @@ namespace Task1.Controllers
             UserManager = userManager;
             AccessTokenFormat = accessTokenFormat;
         }
-
 
 
         public ApplicationUserManager UserManager
