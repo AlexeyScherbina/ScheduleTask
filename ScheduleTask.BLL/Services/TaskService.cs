@@ -15,8 +15,8 @@ namespace ScheduleTask.BLL.Services
 {
     public class TaskService : ITaskService
     {
-        IRepository<Tasks> _taskRepository { get; set; }
-        IRepository<User> _userRepository { get; set; }
+        private IRepository<Tasks> _taskRepository { get; set; }
+        private IRepository<User> _userRepository { get; set; }
 
         public TaskService(IRepository<Tasks> taskRepo, IRepository<User> userRepo)
         {

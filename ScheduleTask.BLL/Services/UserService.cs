@@ -14,7 +14,7 @@ namespace ScheduleTask.BLL.Services
 {
     public class UserService : IUserService
     {
-        IRepository<User> _userRepository { get; set; }
+        private IRepository<User> _userRepository { get; set; }
 
         public UserService(IRepository<User> userRepo)
         {
