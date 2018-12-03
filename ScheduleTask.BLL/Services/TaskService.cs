@@ -48,7 +48,7 @@ namespace ScheduleTask.BLL.Services
             else
             {
                 u = _userRepository.GetById(userId);
-                t.User = u;
+                t.User = u ?? throw new NullReferenceException();
             }
             _taskRepository.Update(t);
         }

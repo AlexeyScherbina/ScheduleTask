@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -18,6 +19,8 @@ namespace ScheduleTask.IntegrationTest
 
         private string token;
 
+        private string baseUrl;
+
         public class TokenResult
         {
             public string access_token { get; set; }
@@ -26,6 +29,7 @@ namespace ScheduleTask.IntegrationTest
         public WebApiTest()
         {
             client = new HttpClient();
+            baseUrl = ConfigurationManager.AppSettings["baseUrl"];
         }
 
         [Test, Order(1)]
@@ -40,7 +44,7 @@ namespace ScheduleTask.IntegrationTest
 
             var content = new FormUrlEncodedContent(values);
 
-            var response = await client.PostAsync("http://localhost:50029/api/Account/Register", content);
+            var response = await client.PostAsync(baseUrl + "api/Account/Register", content);
             var responseString = await response.Content.ReadAsStringAsync();
             responseString.ShouldBe("{\"Message\":\"The request is invalid.\",\"ModelState\":{\"\":[\"Name user1@user.com is already taken.\"]}}");
         }
@@ -56,7 +60,7 @@ namespace ScheduleTask.IntegrationTest
             };
             var content = new FormUrlEncodedContent(values);
 
-            var response = await client.PostAsync("http://localhost:50029/token", content);
+            var response = await client.PostAsync(baseUrl + "token", content);
             var responseString = await response.Content.ReadAsStringAsync();
 
             token = JsonConvert.DeserializeObject<TokenResult>(responseString).access_token;
@@ -67,7 +71,7 @@ namespace ScheduleTask.IntegrationTest
         [Test, Order(3)]
         public async Task GetTasks()
         {
-            var response = await client.GetStringAsync("http://localhost:50029/api/Task/GetTasks");
+            var response = await client.GetStringAsync(baseUrl + "api/Task/GetTasks");
             var tasks =  JsonConvert.DeserializeObject<IEnumerable<TaskViewModel>>(response);
             (tasks != null).ShouldBe(true);
         }
@@ -80,8 +84,13 @@ namespace ScheduleTask.IntegrationTest
                 { "Name", "TASK_TEST" }
             };
             var content = new FormUrlEncodedContent(values);
-            var response = await client.PostAsync("http://localhost:50029/api/Task/AddTask",content);
+            var response = await client.PostAsync(baseUrl + "api/Task/AddTask", content);
             response.StatusCode.ToString().ShouldBe("OK");
+
+            var getResponse = await client.GetStringAsync(baseUrl + "api/Task/GetTasks");
+            var tasks = JsonConvert.DeserializeObject<IEnumerable<TaskViewModel>>(getResponse);
+            int count = tasks.Count(x => x.Name == "TASK_TEST");
+            count.ShouldBe(1);
         }
         [Test, Order(5)]
         public async Task AddUser()
@@ -91,13 +100,19 @@ namespace ScheduleTask.IntegrationTest
                 { "FullName", "USER_TEST" }
             };
             var content = new FormUrlEncodedContent(values);
-            var response = await client.PostAsync("http://localhost:50029/api/User/AddUser", content);
+            var response = await client.PostAsync(baseUrl + "api/User/AddUser", content);
             response.StatusCode.ToString().ShouldBe("OK");
+
+            var getResponse = await client.GetStringAsync(baseUrl + "api/User/GetUsers");
+            var users = JsonConvert.DeserializeObject<IEnumerable<UserViewModel>>(getResponse);
+            int count = users.Count(x => x.FullName == "USER_TEST");
+            count.ShouldBe(1);
         }
+
         [Test, Order(6)]
         public async Task AssignDay()
         {
-            var get = await client.GetStringAsync("http://localhost:50029/api/Task/GetTasks");
+            var get = await client.GetStringAsync(baseUrl + "api/Task/GetTasks");
             var tasks = JsonConvert.DeserializeObject<IEnumerable<TaskViewModel>>(get);
             var task = tasks.FirstOrDefault(x => x.Name == "TASK_TEST");
 
@@ -107,17 +122,44 @@ namespace ScheduleTask.IntegrationTest
                 { "Day", "Monday" }
             };
             var content = new FormUrlEncodedContent(values);
-            var response = await client.PostAsync("http://localhost:50029/api/Task/AssignDay", content);
+            var response = await client.PostAsync(baseUrl + "api/Task/AssignDay", content);
             response.StatusCode.ToString().ShouldBe("OK");
+
+            var getResponse = await client.GetStringAsync(baseUrl + "api/Task/GetTasks");
+            tasks = JsonConvert.DeserializeObject<IEnumerable<TaskViewModel>>(getResponse);
+            var newTask = tasks.FirstOrDefault(x => x.TaskId == task.TaskId);
+            newTask.Day.ShouldBe("Monday");
         }
 
         [Test, Order(7)]
+        public async Task AssignNullDay()
+        {
+            var get = await client.GetStringAsync(baseUrl + "api/Task/GetTasks");
+            var tasks = JsonConvert.DeserializeObject<IEnumerable<TaskViewModel>>(get);
+            var task = tasks.FirstOrDefault(x => x.Name == "TASK_TEST");
+
+            var values = new Dictionary<string, string>
+            {
+                { "TaskId", task.TaskId.ToString() },
+                { "Day", null }
+            };
+            var content = new FormUrlEncodedContent(values);
+            var response = await client.PostAsync(baseUrl + "api/Task/AssignDay", content);
+            response.StatusCode.ToString().ShouldBe("BadRequest");
+
+            var getResponse = await client.GetStringAsync(baseUrl + "api/Task/GetTasks");
+            tasks = JsonConvert.DeserializeObject<IEnumerable<TaskViewModel>>(getResponse);
+            var newTask = tasks.FirstOrDefault(x => x.TaskId == task.TaskId);
+            newTask.Day.ShouldBe("Monday");
+        }
+
+        [Test, Order(8)]
         public async Task AssignUser()
         {
-            var getTasks = await client.GetStringAsync("http://localhost:50029/api/Task/GetTasks");
+            var getTasks = await client.GetStringAsync(baseUrl + "api/Task/GetTasks");
             var tasks = JsonConvert.DeserializeObject<IEnumerable<TaskViewModel>>(getTasks);
             var task = tasks.FirstOrDefault(x => x.Name == "TASK_TEST");
-            var getUsers = await client.GetStringAsync("http://localhost:50029/api/User/GetUsers");
+            var getUsers = await client.GetStringAsync(baseUrl + "api/User/GetUsers");
             var users = JsonConvert.DeserializeObject<IEnumerable<UserViewModel>>(getUsers);
             var user = users.FirstOrDefault(x => x.FullName == "USER_TEST");
 
@@ -127,49 +169,76 @@ namespace ScheduleTask.IntegrationTest
                 { "UserId", user.UserId.ToString() }
             };
             var content = new FormUrlEncodedContent(values);
-            var response = await client.PostAsync("http://localhost:50029/api/Task/AssignUser", content);
+            var response = await client.PostAsync(baseUrl + "api/Task/AssignUser", content);
             response.StatusCode.ToString().ShouldBe("OK");
-        }
 
-        [Test, Order(8)]
-        public async Task DeleteTask()
-        {
-            var getTasks = await client.GetStringAsync("http://localhost:50029/api/Task/GetTasks");
-            var tasks = JsonConvert.DeserializeObject<IEnumerable<TaskViewModel>>(getTasks);
-            var task = tasks.FirstOrDefault(x => x.Name == "TASK_TEST");
-
-            var response = await client.DeleteAsync("http://localhost:50029/api/Task/DeleteTask/"+task.TaskId);
-            response.StatusCode.ToString().ShouldBe("OK");
+            var getResponse = await client.GetStringAsync(baseUrl + "api/Task/GetTasks");
+            tasks = JsonConvert.DeserializeObject<IEnumerable<TaskViewModel>>(getResponse);
+            var newTask = tasks.FirstOrDefault(x => x.TaskId == task.TaskId);
+            (newTask.User is null).ShouldBe(false);
         }
 
         [Test, Order(9)]
+        public async Task AssignUnexistentUser()
+        {
+            var getTasks = await client.GetStringAsync(baseUrl + "api/Task/GetTasks");
+            var tasks = JsonConvert.DeserializeObject<IEnumerable<TaskViewModel>>(getTasks);
+            var task = tasks.FirstOrDefault(x => x.Name == "TASK_TEST");
+
+            var values = new Dictionary<string, string>
+            {
+                { "TaskId", task.TaskId.ToString() },
+                { "UserId", "-1" }
+            };
+            var content = new FormUrlEncodedContent(values);
+            var response = await client.PostAsync(baseUrl + "api/Task/AssignUser", content);
+            response.StatusCode.ToString().ShouldBe("InternalServerError");
+
+            var getResponse = await client.GetStringAsync(baseUrl + "api/Task/GetTasks");
+            tasks = JsonConvert.DeserializeObject<IEnumerable<TaskViewModel>>(getResponse);
+            var newTask = tasks.FirstOrDefault(x => x.TaskId == task.TaskId);
+            (newTask.User is null).ShouldBe(false);
+        }
+
+        [Test, Order(10)]
+        public async Task DeleteTask()
+        {
+            var getTasks = await client.GetStringAsync(baseUrl + "api/Task/GetTasks");
+            var tasks = JsonConvert.DeserializeObject<IEnumerable<TaskViewModel>>(getTasks);
+            var task = tasks.FirstOrDefault(x => x.Name == "TASK_TEST");
+
+            var response = await client.DeleteAsync(baseUrl + "api/Task/DeleteTask/" + task.TaskId);
+            response.StatusCode.ToString().ShouldBe("OK");
+        }
+
+        [Test, Order(11)]
         public async Task DeleteUser()
         {
-            var getUsers = await client.GetStringAsync("http://localhost:50029/api/User/GetUsers");
+            var getUsers = await client.GetStringAsync(baseUrl + "api/User/GetUsers");
             var users = JsonConvert.DeserializeObject<IEnumerable<UserViewModel>>(getUsers);
             var user = users.FirstOrDefault(x => x.FullName == "USER_TEST");
 
-            var response = await client.DeleteAsync("http://localhost:50029/api/User/DeleteUser/" + user.UserId);
+            var response = await client.DeleteAsync(baseUrl + "api/User/DeleteUser/" + user.UserId);
             response.StatusCode.ToString().ShouldBe("OK");
         }
 
         [OneTimeTearDown]
         public async Task ClearData()
         {
-            var getTasks = await client.GetStringAsync("http://localhost:50029/api/Task/GetTasks");
+            var getTasks = await client.GetStringAsync(baseUrl + "api/Task/GetTasks");
             var tasks = JsonConvert.DeserializeObject<IEnumerable<TaskViewModel>>(getTasks);
             tasks = tasks.Where(x => x.Name == "TASK_TEST");
             foreach (var task in tasks)
             {
-                await client.DeleteAsync("http://localhost:50029/api/Task/DeleteTask/" + task.TaskId);
+                await client.DeleteAsync(baseUrl + "api/Task/DeleteTask/" + task.TaskId);
             }
 
-            var getUsers = await client.GetStringAsync("http://localhost:50029/api/User/GetUsers");
+            var getUsers = await client.GetStringAsync(baseUrl + "api/User/GetUsers");
             var users = JsonConvert.DeserializeObject<IEnumerable<UserViewModel>>(getUsers);
             users = users.Where(x => x.FullName == "USER_TEST");
             foreach (var user in users)
             {
-                await client.DeleteAsync("http://localhost:50029/api/User/DeleteUser/" + user.UserId);
+                await client.DeleteAsync(baseUrl + "api/User/DeleteUser/" + user.UserId);
             }
         }
     }
