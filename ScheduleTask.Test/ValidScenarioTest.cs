@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Http.Results;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MvcContrib.TestHelper;
+using NUnit.Framework;
 using ScheduleTask.BLL.DTO;
 using ScheduleTask.BLL.Services;
 using ScheduleTask.DAL;
@@ -13,7 +14,7 @@ using Task1.Models;
 
 namespace ScheduleTask.Test
 {
-    [TestClass]
+    [TestFixture]
     public class ValidScenarioTest
     {
         private TaskController tc;
@@ -26,7 +27,7 @@ namespace ScheduleTask.Test
             uc = new UserController(new UserService(new UserRepository(db)));
         }
 
-        [TestMethod]
+        [Test]
         public void AddTask_NewTask_Added()
         {
             var result = tc.AddTask(new TaskViewModel()
@@ -41,7 +42,7 @@ namespace ScheduleTask.Test
             task.Name.ShouldBe("TEST_TASK");
         }
 
-        [TestMethod]
+        [Test]
         public void AddUser_NewUser_Added()
         {
             var result = uc.AddUser(new UserViewModel()
@@ -56,7 +57,7 @@ namespace ScheduleTask.Test
             user.FullName.ShouldBe("TEST_USER");
         }
 
-        [TestMethod]
+        [Test]
         public void AssignUser_ExistentUserAndTask_Assigned()
         {
             IEnumerable<UserViewModel> u = uc.GetUsers();
@@ -77,7 +78,7 @@ namespace ScheduleTask.Test
             task.User.FullName.ShouldBe("TEST_USER");
         }
 
-        [TestMethod]
+        [Test]
         public void AssignDay_ExistentTaskAndDay_Assigned()
         {
             IEnumerable<TaskViewModel> t = tc.GetTasks();
@@ -100,7 +101,7 @@ namespace ScheduleTask.Test
             task.Day.ShouldBe("Monday");
         }
 
-        [TestMethod]
+        [Test]
         public void DeleteTask_AllTasks_TasksDeleted()
         {
             IEnumerable<TaskViewModel> t = tc.GetTasks();
@@ -115,7 +116,7 @@ namespace ScheduleTask.Test
             t.Count().ShouldBe(0);
         }
 
-        [TestMethod]
+        [Test]
         public void DeleteUser_AllUsers_UsersDeleted()
         {
             IEnumerable<UserViewModel> u = uc.GetUsers();
