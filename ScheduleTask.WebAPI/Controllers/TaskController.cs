@@ -36,6 +36,11 @@ namespace Task1.Controllers
                 return BadRequest("Empty data sent.");
             }
 
+            if (task.Name == null)
+            {
+                return BadRequest("Name field can't be null");
+            }
+
             TaskDTO t = new TaskDTO
             {
                 Name = task.Name,
@@ -105,12 +110,15 @@ namespace Task1.Controllers
                 return BadRequest("Empty data sent.");
             }
 
+            if (task.Day == null)
+            {
+                return BadRequest("Day can't be null");
+            }
+
             TaskDTO t = new TaskDTO
             {
                 TaskId = task.TaskId,
-                Day = task.Day,
-                Description = task.Description,
-                Name = task.Name
+                Day = task.Day
             };
 
             try
