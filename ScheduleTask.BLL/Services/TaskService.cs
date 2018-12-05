@@ -48,11 +48,11 @@ namespace ScheduleTask.BLL.Services
             else
             {
                 u = _userRepository.GetById(userId);
-                t.User = u;
-                if (t.User == null)
+                if (u == null)
                 {
                     throw new NullReferenceException();
                 }
+                t.User = u;
             }
             _taskRepository.Update(t);
         }
