@@ -150,7 +150,7 @@ namespace ScheduleTask.IntegrationTest
             var getResponse = await client.GetStringAsync(baseUrl + "api/Task/GetTasks");
             tasks = JsonConvert.DeserializeObject<IEnumerable<TaskViewModel>>(getResponse);
             var newTask = tasks.FirstOrDefault(x => x.TaskId == task.TaskId);
-            newTask.Day.ShouldBe("Monday");
+            newTask.Day.ShouldBe("Monday1");
         }
 
         [Test, Order(8)]
