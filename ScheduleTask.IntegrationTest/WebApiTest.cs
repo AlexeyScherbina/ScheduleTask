@@ -175,7 +175,7 @@ namespace ScheduleTask.IntegrationTest
             var getResponse = await client.GetStringAsync(baseUrl + "api/Task/GetTasks");
             tasks = JsonConvert.DeserializeObject<IEnumerable<TaskViewModel>>(getResponse);
             var newTask = tasks.FirstOrDefault(x => x.TaskId == task.TaskId);
-            (newTask.User is null).ShouldBe(false);
+            (newTask.User == null).ShouldBe(false);
         }
 
         [Test, Order(9)]
@@ -197,7 +197,7 @@ namespace ScheduleTask.IntegrationTest
             var getResponse = await client.GetStringAsync(baseUrl + "api/Task/GetTasks");
             tasks = JsonConvert.DeserializeObject<IEnumerable<TaskViewModel>>(getResponse);
             var newTask = tasks.FirstOrDefault(x => x.TaskId == task.TaskId);
-            (newTask.User is null).ShouldBe(false);
+            (newTask.User == null).ShouldBe(false);
         }
 
         [Test, Order(10)]
